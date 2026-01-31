@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#d5602d" />
+  <title>Time Tiles</title>
+  <meta name="description" content="Plan the next 2 hours as draggable tiles. Start a tile, stay on track, share your plan." />
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__mark" aria-hidden="true">⟡</div>
+      <div class="brand__text">
+        <div class="brand__name">Time Tiles</div>
+        <div class="brand__tag">A tiny 2‑hour director for real life.</div>
+      </div>
+    </div>
+
+    <div class="topbar__actions">
+      <button class="btn btn--ghost" id="btnShare" type="button" title="Copy a share link">
+        Share
+      </button>
+      <button class="btn btn--ghost" id="btnExport" type="button" title="Export your plan to JSON">
+        Export
+      </button>
+      <label class="btn btn--ghost" for="fileImport" title="Import a previously exported JSON file">
+        Import
+      </label>
+      <input id="fileImport" class="sr-only" type="file" accept="application/json" />
+      <button class="btn" id="btnReset" type="button" title="Clear plan">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel panel--compose" aria-label="Compose your next 2 hours">
+      <div class="panel__head">
+        <h1 class="h1">Build your next 2 hours</h1>
+        <p class="muted">Add tiles, drag to reorder, then press <kbd>Space</kbd> to start/pause.</p>
+      </div>
+
+      <div class="compose">
+        <form class="compose__form" id="formAdd">
+          <div class="field">
+            <label class="label" for="title">Tile</label>
+            <input class="input" id="title" name="title" maxlength="60" placeholder="e.g., dishes, email, stretch" required />
+          </div>
+          <div class="field">
+            <label class="label" for="mins">Minutes</label>
+            <input class="input" id="mins" name="mins" type="number" min="5" max="120" step="5" value="25" required />
+          </div>
+          <div class="field">
+            <label class="label" for="energy">Energy</label>
+            <select class="input" id="energy" name="energy">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <button class="btn" type="submit">Add tile</button>
+        </form>
+
+        <div class="stats" id="stats" aria-live="polite"></div>
+      </div>
+
+      <div class="timeline" id="timeline" aria-label="Tiles timeline" role="list"></div>
+    </section>
+
+    <aside class="panel panel--focus" aria-label="Focus">
+      <div class="panel__head">
+        <h2 class="h2">Now</h2>
+        <p class="muted" id="nowHint">Pick a tile and press Start.</p>
+      </div>
+
+      <div class="focus">
+        <div class="focus__card" id="focusCard">
+          <div class="focus__title" id="focusTitle">No tile selected</div>
+          <div class="focus__meta" id="focusMeta">—</div>
+
+          <div class="ring" aria-label="Progress">
+            <svg viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Progress ring">
+              <circle class="ring__track" cx="60" cy="60" r="50"></circle>
+              <circle class="ring__progress" cx="60" cy="60" r="50" pathLength="100"></circle>
+            </svg>
+            <div class="ring__text">
+              <div class="ring__time" id="focusTime">00:00</div>
+              <div class="ring__sub" id="focusSub">ready</div>
+            </div>
+          </div>
+
+          <div class="focus__actions">
+            <button class="btn" id="btnStartPause" type="button">Start</button>
+            <button class="btn btn--ghost" id="btnDone" type="button">Done</button>
+          </div>
+
+          <details class="help">
+            <summary>Shortcuts</summary>
+            <ul>
+              <li><kbd>Space</kbd> start/pause</li>
+              <li><kbd>Enter</kbd> mark done</li>
+              <li><kbd>↑</kbd>/<kbd>↓</kbd> move selection</li>
+            </ul>
+          </details>
+        </div>
+
+        <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <span class="muted">Permalinks keep your plan in the URL hash. No server.</span>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
