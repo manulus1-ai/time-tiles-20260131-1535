@@ -264,13 +264,18 @@ function renderStats() {
   const planned = totalPlannedMins();
   const remaining = remainingWindowMins();
   const done = state.tiles.filter((t) => t.done).length;
+  const over = Math.max(0, planned - state.windowMins);
 
   const stats = $('#stats');
-  stats.replaceChildren(
+  const nodes = [
     pill(`Planned: ${planned}m`, 'var(--terracotta)'),
-    pill(`Left in window: ${remaining}m`, remaining === 0 ? 'var(--danger)' : 'var(--cactus)'),
-    pill(`Done: ${done}/${state.tiles.length}`, 'var(--sun)')
-  );
+    pill(`Left in window: ${remaining}m`, remaining === 0 && planned > 0 ? 'var(--danger)' : 'var(--cactus)'),
+    pill(`Done: ${done}/${state.tiles.length}`, 'var(--sun)'),
+  ];
+
+  if (over > 0) nodes.splice(1, 0, pill(`Over by: ${over}m`, 'var(--danger)'));
+
+  stats.replaceChildren(...nodes);
 }
 
 function pill(text, color) {
