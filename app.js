@@ -418,7 +418,21 @@ function renderTimer() {
   }
 }
 
+function ensureFocusValid() {
+  const t = getFocusTile();
+  if (!t) return;
+  if (!t.done) return;
+
+  const idx = state.tiles.findIndex((x) => x.id === t.id);
+  const next = state.tiles.slice(idx + 1).find((x) => !x.done) ?? state.tiles.find((x) => !x.done) ?? null;
+  state.focus.tileId = next?.id ?? null;
+  state.selectedId = next?.id ?? null;
+  state.focus.elapsedMs = 0;
+  stopTimer();
+}
+
 function render() {
+  ensureFocusValid();
   renderStats();
   renderTimeline();
   renderFocus();
